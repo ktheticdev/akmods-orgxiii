@@ -4,7 +4,7 @@ Release:        1%{?dist}
 Summary:        Signing key and repos for ublue os akmods
 
 License:        MIT
-URL:            https://github.com/ublue-os/akmods
+URL:            https://github.com/JoViatrix/akmods-lite
 
 BuildArch:      noarch
 Supplements:    mokutil policycoreutils

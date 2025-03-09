@@ -4,7 +4,7 @@ Release:        1%{?dist}
 Summary:        Additional files for nvidia driver support on CoreOS
 
 License:        MIT
-URL:            https://github.com/ublue-os/akmods
+URL:            https://github.com/JoViatrix/akmods-lite
 
 BuildArch:      noarch
 Supplements:    mokutil policycoreutils
