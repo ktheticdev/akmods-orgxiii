@@ -1,4 +1,4 @@
-name: ublue akmods 41
+name: akmods lite 41
 on:
   merge_group:
   pull_request:
