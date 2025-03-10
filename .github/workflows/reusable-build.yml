@@ -155,7 +155,7 @@ jobs:
         cfile_suffix:
           - common
           - extra
-          - nvidia
+          # - nvidia
           - nvidia-open
           - zfs
         exclude:
