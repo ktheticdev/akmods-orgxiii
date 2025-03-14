@@ -7,6 +7,12 @@ ARCH="$(rpm -E '%_arch')"
 KERNEL="$(rpm -q "${KERNEL_NAME}" --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}')"
 RELEASE="$(rpm -E '%fedora')"
 
+if [[ "${RELEASE}" -ge 42 ]]; then
+    COPR_RELEASE="rawhide"
+else
+    COPR_RELEASE="${RELEASE}"
+fi
+
 curl -LsSf -o /etc/yum.repos.d/_copr_asan-acer-modules.repo "https://copr.fedorainfracloud.org/coprs/asan/acer-modules/repo/fedora-${COPR_RELEASE}/asan-acer-modules-fedora-${COPR_RELEASE}.repo"
 
 ### BUILD acer-wmi-battery (succeed or fail-fast with debug output)
