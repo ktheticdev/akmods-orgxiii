@@ -56,6 +56,11 @@ curl -LsSf -o /etc/yum.repos.d/_copr_rok-cdemu.repo \
     "https://copr.fedorainfracloud.org/coprs/rok/cdemu/repo/fedora-${COPR_RELEASE}/rok-cdemu-fedora-${COPR_RELEASE}.repo"
 fi
 
+if [[ -f $(find /tmp/akmods-rpms/kmods/kmod-acer-wmi-battery-*.rpm) ]]; then
+curl -LsSf -o /etc/yum.repos.d/_copr_asan-acer-modules.repo \
+    "https://copr.fedorainfracloud.org/coprs/asan/acer-modules/repo/fedora-${COPR_RELEASE}/asan-acer-modules-fedora-${COPR_RELEASE}.repo"
+fi
+
 if [[ -f $(find /tmp/akmods-rpms/kmods/kmod-facetimehd-*.rpm) ]]; then
 curl -LsSf -o /etc/yum.repos.d/_copr_mulderje-facetimehd-kmod.repo \
     "https://copr.fedorainfracloud.org/coprs/mulderje/facetimehd-kmod/repo/fedora-${COPR_RELEASE}/mulderje-facetimehd-kmod-fedora-${COPR_RELEASE}.repo"
