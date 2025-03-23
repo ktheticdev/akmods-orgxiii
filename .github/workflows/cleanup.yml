@@ -17,7 +17,7 @@ jobs:
         uses: dataaxiom/ghcr-cleanup-action@v1.0.16
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          packages: akmods,akmods-zfs,akmods-extra,akmods-nvidia-open
+          packages: akmods,akmods-extra,akmods-nvidia-open
           older-than: 90 days
           delete-orphaned-images: true
           keep-n-tagged: 7
