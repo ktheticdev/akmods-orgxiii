@@ -3,7 +3,7 @@ on:
   workflow_call:
     inputs:
       fedora_version:
-        description: "The Fedora release version: 40, 41, etc"
+        description: "The Fedora release version: 42"
         required: true
         type: string
       kernel_flavor:
@@ -35,7 +35,7 @@ jobs:
 
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Get Kernel Version
         id: kernel-version
@@ -46,7 +46,7 @@ jobs:
 
       - name: Cache Kernel RPMs
         id: cache-kernel
-        uses: actions/cache@v4
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
           path: ${{ env.KCPATH }}
           key: ${{ inputs.kernel_flavor }}-${{ steps.kernel-version.outputs.kernel_release }} # job outputs KCKEY
@@ -157,13 +157,15 @@ jobs:
           - extra
           # - nvidia
           - nvidia-open
-          - zfs
+          # - zfs
         exclude:
           - kernel_flavor: main
             cfile_suffix: zfs
           - kernel_flavor: asus
             cfile_suffix: zfs
           - kernel_flavor: bazzite
+            cfile_suffix: zfs
+          - kernel_flavor: asus
             cfile_suffix: zfs
           - kernel_flavor: surface
             cfile_suffix: zfs
@@ -175,7 +177,7 @@ jobs:
 
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Create cache parent dir
         shell: bash
@@ -184,7 +186,7 @@ jobs:
 
       - name: Cache Kernel RPMs
         id: cache-kernel
-        uses: actions/cache@v4
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
           path: ${{ env.KCPATH }}
           key: ${{ needs.cache-kernel.outputs.KCKEY }}
@@ -273,7 +275,7 @@ jobs:
 
       # Build metadata
       - name: Image Metadata
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 # v5.7.0
         id: meta
         with:
           images: |
@@ -305,7 +307,7 @@ jobs:
       # Build image using Buildah action
       - name: Build Image
         id: build_image
-        uses: redhat-actions/buildah-build@v2
+        uses: redhat-actions/buildah-build@7a95fa7ee0f02d552a32753e7414641a04307056 # v2
         with:
           containerfiles: |
             ./Containerfile.${{ matrix.cfile_suffix }}
@@ -322,7 +324,7 @@ jobs:
           oci: false
 
       - name: Build Test Image
-        uses: redhat-actions/buildah-build@v2
+        uses: redhat-actions/buildah-build@7a95fa7ee0f02d552a32753e7414641a04307056 # v2
         with:
           containerfiles: |
             ./Containerfile.test
@@ -332,6 +334,7 @@ jobs:
             BUILDER_IMAGE=${{ env.BUILDER_IMAGE }}
             KERNEL_FLAVOR=${{ inputs.kernel_flavor }}
             FEDORA_MAJOR_VERSION=${{ inputs.fedora_version }}
+            RPMFUSION_MIRROR=${{ vars.RPMFUSION_MIRROR }}
             INPUT_AKMODS=${{ env.IMAGE_NAME }}
             INPUT_TAG=${{ env.default_tag }}
             DUAL_SIGN=false
@@ -350,19 +353,19 @@ jobs:
       # https://github.com/macbre/push-to-ghcr/issues/12
       - name: Lowercase Registry
         id: registry_case
-        uses: ASzc/change-string-case-action@v6
+        uses: ASzc/change-string-case-action@d0603cd0a7dd490be678164909f65c7737470a7f # v6
         with:
           string: ${{ env.IMAGE_REGISTRY }}
 
       - name: Push To GHCR
-        uses: Wandalen/wretry.action@v3.8.0
+        uses: Wandalen/wretry.action@e68c23e6309f2871ca8ae4763e7629b9c258e1ea # v3.8.0
         id: push
         if: github.event_name != 'pull_request'
         env:
           REGISTRY_USER: ${{ github.actor }}
           REGISTRY_PASSWORD: ${{ github.token }}
         with:
-          action: redhat-actions/push-to-registry@v2
+          action: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2
           attempt_limit: 3
           attempt_delay: 15000
           with: |
@@ -375,7 +378,7 @@ jobs:
               --disable-content-trust
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3.4.0
         if: github.event_name != 'pull_request'
         with:
           registry: ghcr.io
@@ -383,7 +386,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       # Sign container
-      - uses: sigstore/cosign-installer@v3.8.1
+      - uses: sigstore/cosign-installer@d7d6bc7722e3daa8354c50bcb52f4837da5e9b6a # v3.8.1
         if: github.event_name != 'pull_request'
 
       - name: Sign container image

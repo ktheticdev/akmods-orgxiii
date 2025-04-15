@@ -1,6 +1,6 @@
 # ublue-os akmods
 
-[![akmods lite 41](https://github.com/JoViatrix/akmods-lite/actions/workflows/build-41.yml/badge.svg)](https://github.com/JoViatrix/akmods-lite/actions/workflows/build-41.yml)
+[![akmods lite 42](https://github.com/JoViatrix/akmods-lite/actions/workflows/build-42.yml/badge.svg)](https://github.com/JoViatrix/akmods-lite/actions/workflows/build-42.yml)
 
 A layer for adding extra kernel modules to your image. Use for better hardware support and a few other features!
 
@@ -60,23 +60,6 @@ The `nvidia` stream image contains
 | [zenergy](https://github.com/BoukeHaarsma23/zenergy) | extra | Based on AMD_ENERGY driver, but with some jiffies added so non-root users can read it safely | [![badge](https://copr.fedorainfracloud.org/coprs/ublue-os/akmods/package/zenergy-kmod/status_image/last_build.png)](https://copr.fedorainfracloud.org/coprs/ublue-os/akmods/package/zenergy-kmod) |
 | [zfs](https://github.com/openzfs/zfs) | zfs | OpenZFS advanced file system and volume manager (From Ucore, CoreOS Only) |
 
-## Notes
-
-We do our best to support all current builds of Fedora, current versions of the kernel modules listed, and the latest NVIDIA driver.
-**Note: NVIDIA legacy driver version 470 is no longer provided as RPMfusion has ceased updates to the package and it no longer builds with kernel 6.8 which has now released for Fedora 39. Also the `-550` extra driver version tag has been removed as the latest driver will always be included.**
-
-The majority of the drivers are tagged with `KERNEL_TYPE-FEDORA_RELEASE`. NVIDIA drivers are bundled distinctly with tag `KERNEL_TYPE-FEDORA_RELEASE-NVIDIA_VERSION`.
-
-| KERNEL_TYPE | FEDORA_RELEASE | TAG |
-| - | - | - |
-| Fedora stock kernel | 39 | `main-39` |
-| | 40 | `main-40` |
-| [patched for ASUS devices](https://copr.fedorainfracloud.org/coprs/lukenukem/asus-kernel) | 39 | `asus-39`|
-| | 40 | `asus-40` |
-| [patched fsync](https://copr.fedorainfracloud.org/coprs/sentry/kernel-fsync) | 39 | `fsync-39` |
-| [patched Microsoft Surface devices](https://github.com/linux-surface/linux-surface/) | 39 | `surface-39` |
-| | 40 | `surface-40` |
-
 ## Usage
 
 To install one of these kmods, you'll need to install any of their specific dependencies (checkout the `build-prep.sh` and the specific `build-FOO.sh` script for details).
@@ -107,16 +90,3 @@ These examples show:
 2. installing the respective ublue specific RPM
 3. installing a kmods RPM.
 
-## Adding kmods
-
-If you have a kmod you want to contribute send a pull request by adding a script using [build-kmod-wl.sh](https://github.com/ublue-os/akmods/blob/main/build-kmod-wl.sh) as an example.
-
-## Verification
-
-These images are signed with sisgstore's [cosign](https://docs.sigstore.dev/cosign/overview/). You can verify the signature by downloading the `cosign.pub` key from this repo and running the following command, replacing `RELEASE` with either `39` or `40`:
-
-    cosign verify --key cosign.pub ghcr.io/ublue-os/akmods:RELEASE
-
-## Metrics
-
-![Alt](https://repobeats.axiom.co/api/embed/a7ddeb1a3d2e0ce534ccf7cfa75c33b35183b106.svg "Repobeats analytics image")
