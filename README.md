@@ -2,31 +2,67 @@
 
 [![akmods lite 42](https://github.com/JoViatrix/akmods-lite/actions/workflows/build-42.yml/badge.svg)](https://github.com/JoViatrix/akmods-lite/actions/workflows/build-42.yml)
 
-A layer for adding extra kernel modules to your image. Use for better hardware support and a few other features!
+OCI images providing a set of cached kernel RPMs and extra kernel modules to Universal Blue images. Used for better hardware support and consistent build process.
 
 ## How it's organized
 
-The [`akmods` image](https://github.com/orgs/ublue-os/packages/container/package/akmods) is built and published daily. However, there's not a single image but several, given various kernel support we now provide.
+The [`akmods` image](https://github.com/orgs/ublue-os/packages/container/package/akmods) is built and published daily. However, there's not a single image but several, given various kernels we now support.
 
-The akmods package is broken out into three akmod "streams":
+The akmods packages are divided up for building in a few different "groups":
 
-- `common` - any kmod installed by default in Bluefin or which was originally in main pre-39
-- `extra` - primarily for kmods used in Bazzite or any others we need, but don't fit in `common`
-- `nvidia` - only for the nvidia kmod and addons
-- `zfs` - only for the zfs kmod and utilities
+- `common` - any kmod installed by default in Bluefin/Aurora (or were originally in main images pre-Fedora 39)
+- `extra` - any kmods used by Bazzite but not Bluefine/Aurora
+- `nvidia` - only the nvidia proprietary kmod and addons
+- `nvidia-open` - only the nvidia-open kmod and addons
+- `zfs` - only the zfs kmod and utilities built for select kernels
 
-Feel free to PR more kmod build scripts into this repo!
+Each of these images contains a cached copy of the respective kernel RPMs compatible with the respective kmods for the image.
+
+Builds also run for different kernels:
+
+- `bazzite` - Bazzite [builds a kernel with gaming specific patches](https://github.com/bazzite-org/kernel-bazzite) for the current release of Fedora
+- `ublue 41` - Fedora 41 kernel builds:
+  - `main` - current default kernel version
+  - `coreos-stable` - current Fedora CoreOS stable kernel version
+  - `coreos-testing` - current Fedora CoreOS testing kernel version
+- `ublue 42` - Fedora 42 kernel builds:
+  - `main` - current default kernel version
+  - `coreos-stable` - current Fedora CoreOS stable kernel version
+  - `coreos-testing` - current Fedora CoreOS testing kernel version
+
+This table shows what groups build for which kernel and Fedora release:
+
+| Build | Kernel | akmods group |
+|-------|--------|--------------|
+| bazzite | bazzite | common |
+| bazzite | bazzite | extra |
+| bazzite | bazzite | nvidia |
+| bazzite | bazzite | nvidia-open |
+| 41 | main | common |
+| 41 | main | nvidia |
+| 41 | main | nvidia-open |
+| 41 | coreos-stable | common |
+| 41 | coreos-stable | nvidia |
+| 41 | coreos-stable | nvidia-open |
+| 41 | coreos-stable | zfs |
+| 42 | main | common |
+| 42 | main | nvidia |
+| 42 | main | nvidia-open |
+| 42 | coreos-stable | common |
+| 42 | coreos-stable | nvidia |
+| 42 | coreos-stable | nvidia-open |
+| 42 | coreos-stable | zfs |
 
 ## Features
 
 ### Overview
 
-The `common` stream image contains related kmod packages, plus:
+The `common` images contain related kmod packages, plus:
 
 - `ublue-os-akmods-addons` - installs extra repos and our kmods signing key; install and import to allow SecureBoot systems to use these kmods
 - `ublue-os-ucore-addons` - a slightly lighter `ublue-os-akmods-addons` for CoreOS/uCore systems
 
-The `nvidia` stream image contains
+The `nvidia` and `nvidia-open` images contains
 
 - `ublue-os-nvidia-addons` - installs extra repos enabling our nvidia support
   - [nvidia container selinux policy](https://github.com/NVIDIA/dgx-selinux/tree/master/src/nvidia-container-selinux) - uses RHEL9 policy as the closest match
@@ -62,25 +98,25 @@ The `nvidia` stream image contains
 
 ## Usage
 
-To install one of these kmods, you'll need to install any of their specific dependencies (checkout the `build-prep.sh` and the specific `build-FOO.sh` script for details).
+To install one of these kmods, you'll need to install any of their specific dependencies (checkout the `build-prep.sh` and the specific `build-FOO.sh` script for details), and ensure you are on a compatible kernel.
 
-For common images, add something like this to your Containerfile, replacing `TAG` with one of the `something-FR` tags above:
+Using common images as an example, add something like this to your Containerfile, replacing `TAG` with the appropriate tag for the image:
 
-    COPY --from=ghcr.io/ublue-os/akmods:TAG /rpms/ /tmp/rpms
-    RUN find /tmp/rpms
-    RUN rpm-ostree install /tmp/rpms/ublue-os/ublue-os-akmods*.rpm
-    RUN rpm-ostree install /tmp/rpms/kmods/kmod-v4l2loopback*.rpm
+    COPY --from=ghcr.io/ublue-os/akmods:TAG / /tmp/akmods-common
+    RUN find /tmp/akmods-common
+    ## optionally install remove old and install new kernel
+    # dnf -y remove --no-autoremove kernel kernel-core kernel-modules kernel-modules-core kernel-modules-extra
+    ## install ublue support package and desired kmod(s)
+    RUN dnf install /tmp/rpms/ublue-os/ublue-os-akmods*.rpm
+    RUN dnf install /tmp/rpms/kmods/kmod-v4l2loopback*.rpm
 
-For extra images, add something like this to your Containerfile, replacing `TAG` with one of the `something-FR` tags above:
+For NVIDIA images, add something like this to your Containerfile, replacing `TAG` with the appropriate tag for the image:
 
-    COPY --from=ghcr.io/ublue-os/akmods-extra:TAG /rpms/ /tmp/rpms
-    RUN find /tmp/rpms
-    RUN rpm-ostree install /tmp/rpms/kmods/kmod-facetimehd*.rpm
-
-For NVIDIA images, add something like this to your Containerfile, replacing `TAG` with one of the `something-FR-NVV` tags above:
-
-    COPY --from=ghcr.io/ublue-os/akmods-nvidia:TAG /rpms/ /tmp/rpms
-    RUN find /tmp/rpms
+    COPY --from=ghcr.io/ublue-os/akmods-nvidia:TAG / /tmp/akmods-nvidia
+    RUN find /tmp/akmods-nvidia
+    ## optionally install remove old and install new kernel
+    # dnf -y remove --no-autoremove kernel kernel-core kernel-modules kernel-modules-core kernel-modules-extra
+    ## install ublue support package and desired kmod(s)
     RUN rpm-ostree install /tmp/rpms/ublue-os/ublue-os-nvidia*.rpm
     RUN rpm-ostree install /tmp/rpms/kmods/kmod-nvidia*.rpm
 
