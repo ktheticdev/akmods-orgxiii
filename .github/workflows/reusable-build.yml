@@ -159,8 +159,8 @@ jobs:
           - nvidia-open
           # - zfs
         exclude:
-          - kernel_flavor: main
-            cfile_suffix: extra
+          #- kernel_flavor: main
+          #  cfile_suffix: extra
           - kernel_flavor: coreos-stable
             cfile_suffix: extra
           - kernel_flavor: coreos-testing
