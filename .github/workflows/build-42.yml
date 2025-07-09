@@ -20,7 +20,7 @@ jobs:
         fedora_version:
           - 42
         kernel_flavor:
-          - cachy
+          - cachyos
     with:
       fedora_version: ${{ matrix.fedora_version }}
       kernel_flavor: ${{ matrix.kernel_flavor }}

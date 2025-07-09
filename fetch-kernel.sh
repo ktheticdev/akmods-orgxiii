@@ -41,7 +41,7 @@ case "$kernel_flavor" in
         ;;
     "centos-hsk")
         ;;
-    "cachy")
+    "cachyos")
 	dnf copr enable -y bieszczaders/kernel-cachyos
 	;;
     "main")
@@ -105,15 +105,13 @@ elif [[ "${kernel_flavor}" == "centos-hsk" ]]; then
         kernel-devel-"${kernel_version}" \
         kernel-devel-matched-"${kernel_version}" \
         kernel-uki-virt-"${kernel_version}"
-elif [[ "${kernel_flavor}" == "cachy" ]]; then
-    dnf download -y \
-	kernel-"${kernel_version}" \
-        kernel-modules-"${kernel_version}" \
-        kernel-modules-core-"${kernel_version}" \
-        kernel-modules-extra-"${kernel_version}" \
-        kernel-devel-"${kernel_version}" \
-        kernel-devel-matched-"${kernel_version}" \
-        kernel-uki-virt-"${kernel_version}"
+elif [[ "${kernel_flavor}" == "cachyos" ]]; then
+    dnf download -y --enablerepo="copr:copr.fedorainfracloud.org:bieszczaders:kernel-${kernel_flavor}" \
+	kernel-cachyos-"${kernel_version}" \
+	kernel-cachyos-core-"${kernel_version}" \
+        kernel-cachyos-modules-"${kernel_version}" \
+        kernel-cachyos-devel-"${kernel_version}" \
+        kernel-cachyos-devel-matched-"${kernel_version}" \
 else
     KERNEL_MAJOR_MINOR_PATCH=$(echo "$kernel_version" | cut -d '-' -f 1)
     KERNEL_RELEASE="$(echo "$kernel_version" | cut -d - -f 2 | rev | cut -d . -f 2- | rev)"
