@@ -111,7 +111,7 @@ elif [[ "${kernel_flavor}" == "cachyos" ]]; then
 	kernel-cachyos-core-"${kernel_version}" \
         kernel-cachyos-modules-"${kernel_version}" \
         kernel-cachyos-devel-"${kernel_version}" \
-        kernel-cachyos-devel-matched-"${kernel_version}" \
+        kernel-cachyos-devel-matched-"${kernel_version}"
 else
     KERNEL_MAJOR_MINOR_PATCH=$(echo "$kernel_version" | cut -d '-' -f 1)
     KERNEL_RELEASE="$(echo "$kernel_version" | cut -d - -f 2 | rev | cut -d . -f 2- | rev)"
@@ -169,6 +169,11 @@ elif [[ "${kernel_flavor}" =~ "centos" ]]; then
         /kernel-modules-"$kernel_version".rpm \
         /kernel-modules-core-"$kernel_version".rpm \
         /kernel-modules-extra-"$kernel_version".rpm
+elif [[ "${kernel_flavor}" =~ "cachyos" ]]; then
+    dnf install -y \
+	/kernel-cachyos-"$kernel_version".rpm \
+	/kernel-cachyos-core-"$kernel_version".rpm \
+	/kernel-cachyos-modules-"$kernel_version".rpm
 else
     dnf install -y \
         /kernel-"$kernel_version".rpm \
