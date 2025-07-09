@@ -133,7 +133,7 @@ runs:
             ;;
           "cachyos")
             $dnf copr enable -y bieszczaders/kernel-cachyos 
-            linux=$($dnf repoquery --repoid copr:copr.fedorainfracloud.org:bieszczaders:kernel-cachyos --whatprovides kernel | grep -wv -e rt -e server | sort -V | tail -n1 | sed 's/.*://')
+            linux=$($dnf repoquery --repoid copr:copr.fedorainfracloud.org:bieszczaders:kernel-cachyos --whatprovides kernel | grep -wv -e rt -e server -e lts | sort -V | tail -n1 | sed 's/.*://')
             ;;
           "coreos-stable")
             coreos_kernel stable
