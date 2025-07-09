@@ -110,15 +110,15 @@ jobs:
           fi
 
           cd ${{ env.KCWD }}/rpms
-          rpm2cpio kernel-core-"${{ steps.kernel-version.outputs.kernel_release }}".rpm | cpio -idmv
+          rpm2cpio kernel-cachyos-core-"${{ steps.kernel-version.outputs.kernel_release }}".rpm | cpio -idmv
           cd ./lib/modules/"${{ steps.kernel-version.outputs.kernel_release }}"/
           sbverify --list vmlinuz
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            curl --retry 3 -#fLo kernel-sign.der https://github.com/JoViatrix/akmods-lite/raw/main/certs/public_key.der.test
-            curl --retry 3 -#fLo akmods.der https://github.com/JoViatrix/akmods-lite/raw/main/certs/public_key_2.der.test
+            curl --retry 3 -#fLo kernel-sign.der https://github.com/ktheticdev/akmods-orgxiii/raw/main/certs/public_key.der.test
+            curl --retry 3 -#fLo akmods.der https://github.com/ktheticdev/akmods-orgxiii/raw/main/certs/public_key_2.der.test
           else
-            curl --retry 3 -#fLo kernel-sign.der https://github.com/JoViatrix/akmods-lite/raw/main/certs/public_key.der
-            curl --retry 3 -#fLo akmods.der https://github.com/JoViatrix/akmods-lite/raw/main/certs/public_key_2.der
+            curl --retry 3 -#fLo kernel-sign.der https://github.com/ktheticdev/akmods-orgxiii/raw/main/certs/public_key.der
+            curl --retry 3 -#fLo akmods.der https://github.com/ktheticdev/akmods-orgxiii/raw/main/certs/public_key_2.der
           fi
           openssl x509 -in kernel-sign.der -out kernel-sign.crt
           openssl x509 -in akmods.der -out akmods.crt
