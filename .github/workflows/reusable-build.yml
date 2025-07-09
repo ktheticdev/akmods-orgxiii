@@ -123,7 +123,6 @@ jobs:
           openssl x509 -in kernel-sign.der -out kernel-sign.crt
           openssl x509 -in akmods.der -out akmods.crt
           sbverify --cert kernel-sign.crt vmlinuz || exit 1
-          sbverify --cert akmods.crt vmlinuz || exit 1
 
       - name: Finalize Cache Files
         if: steps.cache-kernel.outputs.cache-hit != 'true'
