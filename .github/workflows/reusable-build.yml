@@ -90,7 +90,7 @@ jobs:
             --env KERNEL_BUILD_TAG=${{ steps.kernel-version.outputs.kernel_build_tag }} \
             --env KERNEL_VERSION=${{ steps.kernel-version.outputs.kernel_release }} \
             --env KERNEL_FLAVOR=${{ inputs.kernel_flavor }} \
-            --env DUAL_SIGN=true \
+            --env DUAL_SIGN=false \
             --name "$container_name" \
             -v ${{ env.KCWD }}:${{ env.KCWD }}:rw \
             -dt "$build_image"

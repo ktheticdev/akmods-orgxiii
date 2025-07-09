@@ -233,6 +233,13 @@ if [[ "${kernel_flavor}" =~ surface ]]; then
         /kernel-surface-modules-core-"$kernel_version".rpm \
         /kernel-surface-modules-extra-"$kernel_version".rpm \
         /root/rpmbuild/RPMS/"$(uname -m)"/kernel-*.rpm
+elif [[ "${kernel_flavor}" =~ cachyos ]]; then
+    rpmrebuild --additional=--buildroot=/tmp/buildroot --batch kernel-cachyos-core-"${kernel_version}"
+    rm -f /usr/lib/modules/"${kernel_version}"/vmlimuz
+    dnf reinstall -y \
+	/kernel-cachyos-"$kernel_version".rpm \
+	/kernel-cachyos-modules-"$kernel_version".rpm \
+	/root/rpmbuild/RPMS/"$(uname -m)"/kernel-*.rpm
 else
     rpmrebuild --additional=--buildroot=/tmp/buildroot --batch kernel-core-"${kernel_version}"
     rm -f /usr/lib/modules/"${kernel_version}"/vmlinuz
