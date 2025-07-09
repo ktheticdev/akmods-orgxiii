@@ -131,6 +131,10 @@ runs:
             fi
             linux=$(skopeo inspect docker://quay.io/fedora-ostree-desktops/$base_image_name:${{ inputs.fedora_version }} | jq -r '.Labels["ostree.linux"]' )
             ;;
+          "cachyos")
+            $dnf copr enable -y bieszczaders/kernel-cachyos 
+            linux=$($dnf repoquery --repoid copr:copr.fedorainfracloud.org:bieszczaders:kernel-cachyos --whatprovides kernel | sort -V | tail -n1 | sed 's/.*://')
+            ;;
           "coreos-stable")
             coreos_kernel stable
             ;;
