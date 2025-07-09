@@ -3,7 +3,7 @@
 set -oeux pipefail
 
 ARCH="$(rpm -E '%_arch')"
-KERNEL="$(rpm -q "${KERNEL_NAME:-kernel}" --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}')"
+KERNEL="$(rpm -q kernel-cachyos --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}')"
 RELEASE="$(rpm -E '%fedora')"
 
 if [[ "${RELEASE}" -ge 41 ]]; then
