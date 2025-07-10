@@ -11,7 +11,6 @@ cp /tmp/ublue-os-akmods-addons/rpmbuild/SOURCES/_copr_ublue-os-akmods.repo /etc/
 ### BUILD gpd-fan (succeed or fail-fast with debug output)
 dnf install -y \
     akmod-gpd-fan-*.fc${RELEASE}.${ARCH}
-export CC=clang CXX=clang++
 akmods --force --kernels "${KERNEL}" --kmod gpd-fan
 modinfo /usr/lib/modules/${KERNEL}/extra/gpd-fan/gpd-fan.ko.xz > /dev/null \
 || (find /var/cache/akmods/gpd-fan/ -name \*.log -print -exec cat {} \; && exit 1)

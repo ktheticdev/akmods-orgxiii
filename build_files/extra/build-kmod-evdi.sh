@@ -21,7 +21,6 @@ set -e pipefail
 export CFLAGS="-fno-pie -no-pie"
 dnf install -y \
   kmod-evdi*.fc"${RELEASE}.${ARCH}" akmod-evdi-*.fc"${RELEASE}.${ARCH}"
-export CC=clang CXX=clang++
 akmods --force --kernels "${KERNEL}" --kmod evdi
 modinfo /usr/lib/modules/"${KERNEL}"/extra/evdi/evdi.ko.xz >/dev/null ||
   (find /var/cache/akmods/evdi/ -name \*.log -print -exec cat {} \; && exit 1)

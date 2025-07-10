@@ -10,7 +10,6 @@ cp /tmp/ublue-os-akmods-addons/rpmbuild/SOURCES/_copr_ublue-os-akmods.repo /etc/
 
 dnf install -y \
     akmod-bmi260-*.fc${RELEASE}.${ARCH}
-export CC=clang CXX=clang++
 akmods --force --kernels "${KERNEL}" --kmod bmi260
 modinfo /usr/lib/modules/${KERNEL}/extra/bmi260/bmi260_{core,i2c}.ko.xz > /dev/null \
 || (find /var/cache/akmods/bmi260/ -name \*.log -print -exec cat {} \; && exit 1)
