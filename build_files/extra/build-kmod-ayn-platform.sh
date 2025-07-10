@@ -10,7 +10,7 @@ cp /tmp/ublue-os-akmods-addons/rpmbuild/SOURCES/_copr_ublue-os-akmods.repo /etc/
 
 dnf install -y \
     akmod-ayn-platform-*.fc${RELEASE}.${ARCH}
-akmods --force --kernels "${KERNEL}" --kmod ayn-platform
+env CC=clang HOSTCC=clang CXX=clang++ LD=ld.lld LLVM=1 LLVM_IAS=1 akmods --force --kernels "${KERNEL}" --kmod ayn-platform
 modinfo /usr/lib/modules/${KERNEL}/extra/ayn-platform/ayn-platform.ko.xz > /dev/null \
 || (find /var/cache/akmods/ayn-platform/ -name \*.log -print -exec cat {} \; && exit 1)
 

@@ -10,7 +10,7 @@ cp /tmp/ublue-os-akmods-addons/rpmbuild/SOURCES/_copr_ublue-os-akmods.repo /etc/
 
 dnf install -y \
     akmod-zenergy-*.fc${RELEASE}.${ARCH}
-akmods --force --kernels "${KERNEL}" --kmod zenergy
+env CC=clang HOSTCC=clang CXX=clang++ LD=ld.lld LLVM=1 LLVM_IAS=1 akmods --force --kernels "${KERNEL}" --kmod zenergy
 modinfo /usr/lib/modules/${KERNEL}/extra/zenergy/zenergy.ko.xz > /dev/null \
 || (find /var/cache/akmods/zenergy/ -name \*.log -print -exec cat {} \; && exit 1)
 

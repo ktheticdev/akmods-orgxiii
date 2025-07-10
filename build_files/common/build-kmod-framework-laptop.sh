@@ -11,7 +11,7 @@ cp /tmp/ublue-os-akmods-addons/rpmbuild/SOURCES/_copr_ublue-os-akmods.repo /etc/
 ### BUILD framework-laptop (succeed or fail-fast with debug output)
 dnf install -y \
     akmod-framework-laptop-*.fc${RELEASE}.${ARCH}
-akmods --force --kernels "${KERNEL}" --kmod framework-laptop
+env CC=clang HOSTCC=clang CXX=clang++ LD=ld.lld LLVM=1 LLVM_IAS=1 akmods --force --kernels "${KERNEL}" --kmod framework-laptop
 modinfo /usr/lib/modules/${KERNEL}/extra/framework-laptop/framework_laptop.ko.xz > /dev/null \
 || (find /var/cache/akmods/framework-laptop/ -name \*.log -print -exec cat {} \; && exit 1)
 

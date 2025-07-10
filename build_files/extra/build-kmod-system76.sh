@@ -18,7 +18,7 @@ curl -LsSf -o /etc/yum.repos.d/_copr_ssweeny-system76-hwe.repo \
 ### BUILD system76-io (succeed or fail-fast with debug output)
 dnf install -y \
     "akmod-system76-driver*.fc${RELEASE}.${ARCH}"
-akmods --force --kernels "${KERNEL}" --kmod system76-driver
+env CC=clang HOSTCC=clang CXX=clang++ LD=ld.lld LLVM=1 LLVM_IAS=1 akmods --force --kernels "${KERNEL}" --kmod system76-driver
 modinfo "/usr/lib/modules/${KERNEL}/extra/system76-driver/system76.ko.xz" >/dev/null ||
     (find /var/cache/akmods/system76-io/ -name \*.log -print -exec cat {} \; && exit 1)
 

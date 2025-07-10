@@ -11,7 +11,7 @@ cp /tmp/ublue-os-akmods-addons/rpmbuild/SOURCES/_copr_ublue-os-akmods.repo /etc/
 ### BUILD openrazer (succeed or fail-fast with debug output)
 dnf install -y \
     akmod-openrazer-*.fc${RELEASE}.${ARCH}
-akmods --force --kernels "${KERNEL}" --kmod openrazer
+env CC=clang HOSTCC=clang CXX=clang++ LD=ld.lld LLVM=1 LLVM_IAS=1 akmods --force --kernels "${KERNEL}" --kmod openrazer
 modinfo /usr/lib/modules/${KERNEL}/extra/openrazer/razerkbd.ko.xz >/dev/null ||
     (find /var/cache/akmods/openrazer/ -name \*.log -print -exec cat {} \; && exit 1)
 modinfo /usr/lib/modules/${KERNEL}/extra/openrazer/razermouse.ko.xz >/dev/null ||
