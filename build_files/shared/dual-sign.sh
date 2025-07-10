@@ -2,7 +2,7 @@
 
 set -eoux pipefail
 
-KERNEL="$(rpm -q kernel-cachyos-lto --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}')"
+KERNEL="$(rpm -q kernel-cachyos --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}')"
 SIGNING_KEY_1="/tmp/certs/signing_key_1.pem"
 SIGNING_KEY_2="/tmp/certs/signing_key_2.pem"
 PUBLIC_CHAIN="/tmp/certs/public_key_chain.pem"

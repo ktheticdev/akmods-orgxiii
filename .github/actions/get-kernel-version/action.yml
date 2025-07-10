@@ -32,7 +32,7 @@ runs:
       run: |
         set -x
 
-        if [[ ${{ inputs.kernel_flavor }} =~ asus|surface|centos|cachyos-lto ]]; then
+        if [[ ${{ inputs.kernel_flavor }} =~ asus|surface|centos|cachyos ]]; then
           if [[ ${{ inputs.kernel_flavor }} =~ centos ]]; then
             build_image="quay.io/centos/centos:${{ inputs.fedora_version }}"
           else
@@ -131,9 +131,9 @@ runs:
             fi
             linux=$(skopeo inspect docker://quay.io/fedora-ostree-desktops/$base_image_name:${{ inputs.fedora_version }} | jq -r '.Labels["ostree.linux"]' )
             ;;
-          "cachyos-lto")
-            $dnf copr enable -y bieszczaders/kernel-cachyos-lto 
-            linux=$($dnf repoquery --repoid copr:copr.fedorainfracloud.org:bieszczaders:kernel-cachyos-lto --whatprovides kernel | grep -wv -e rt -e server -e lts | sort -V | tail -n1 | sed 's/.*://')
+          "cachyos")
+            $dnf copr enable -y bieszczaders/kernel-cachyos 
+            linux=$($dnf repoquery --repoid copr:copr.fedorainfracloud.org:bieszczaders:kernel-cachyos --whatprovides kernel | grep -wv -e rt -e server -e lts | sort -V | tail -n1 | sed 's/.*://')
             ;;
           "coreos-stable")
             coreos_kernel stable

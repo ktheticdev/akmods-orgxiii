@@ -41,8 +41,8 @@ case "$kernel_flavor" in
         ;;
     "centos-hsk")
         ;;
-    "cachyos-lto")
-	dnf copr enable -y bieszczaders/kernel-cachyos-lto
+    "cachyos")
+	dnf copr enable -y bieszczaders/kernel-cachyos
 	;;
     "main")
         ;;
@@ -105,13 +105,13 @@ elif [[ "${kernel_flavor}" == "centos-hsk" ]]; then
         kernel-devel-"${kernel_version}" \
         kernel-devel-matched-"${kernel_version}" \
         kernel-uki-virt-"${kernel_version}"
-elif [[ "${kernel_flavor}" == "cachyos-lto" ]]; then
+elif [[ "${kernel_flavor}" == "cachyos" ]]; then
     dnf download -y --enablerepo="copr:copr.fedorainfracloud.org:bieszczaders:kernel-${kernel_flavor}" \
-	kernel-cachyos-lto-"${kernel_version}" \
-	kernel-cachyos-lto-core-"${kernel_version}" \
-        kernel-cachyos-lto-modules-"${kernel_version}" \
-        kernel-cachyos-lto-devel-"${kernel_version}" \
-        kernel-cachyos-lto-devel-matched-"${kernel_version}"
+	kernel-cachyos-"${kernel_version}" \
+	kernel-cachyos-core-"${kernel_version}" \
+        kernel-cachyos-modules-"${kernel_version}" \
+        kernel-cachyos-devel-"${kernel_version}" \
+        kernel-cachyos-devel-matched-"${kernel_version}"
 else
     KERNEL_MAJOR_MINOR_PATCH=$(echo "$kernel_version" | cut -d '-' -f 1)
     KERNEL_RELEASE="$(echo "$kernel_version" | cut -d - -f 2 | rev | cut -d . -f 2- | rev)"
@@ -169,11 +169,11 @@ elif [[ "${kernel_flavor}" =~ "centos" ]]; then
         /kernel-modules-"$kernel_version".rpm \
         /kernel-modules-core-"$kernel_version".rpm \
         /kernel-modules-extra-"$kernel_version".rpm
-elif [[ "${kernel_flavor}" =~ "cachyos-lto" ]]; then
+elif [[ "${kernel_flavor}" =~ "cachyos" ]]; then
     dnf install -y \
-	/kernel-cachyos-lto-"$kernel_version".rpm \
-	/kernel-cachyos-lto-core-"$kernel_version".rpm \
-	/kernel-cachyos-lto-modules-"$kernel_version".rpm
+	/kernel-cachyos-"$kernel_version".rpm \
+	/kernel-cachyos-core-"$kernel_version".rpm \
+	/kernel-cachyos-modules-"$kernel_version".rpm
 else
     dnf install -y \
         /kernel-"$kernel_version".rpm \
@@ -233,12 +233,12 @@ if [[ "${kernel_flavor}" =~ surface ]]; then
         /kernel-surface-modules-core-"$kernel_version".rpm \
         /kernel-surface-modules-extra-"$kernel_version".rpm \
         /root/rpmbuild/RPMS/"$(uname -m)"/kernel-*.rpm
-elif [[ "${kernel_flavor}" =~ cachyos-lto ]]; then
-    rpmrebuild --additional=--buildroot=/tmp/buildroot --batch kernel-cachyos-lto-core-"${kernel_version}"
+elif [[ "${kernel_flavor}" =~ cachyos ]]; then
+    rpmrebuild --additional=--buildroot=/tmp/buildroot --batch kernel-cachyos-core-"${kernel_version}"
     rm -f /usr/lib/modules/"${kernel_version}"/vmlimuz
     dnf reinstall -y \
-	/kernel-cachyos-lto-"$kernel_version".rpm \
-	/kernel-cachyos-lto-modules-"$kernel_version".rpm \
+	/kernel-cachyos-"$kernel_version".rpm \
+	/kernel-cachyos-modules-"$kernel_version".rpm \
 	/root/rpmbuild/RPMS/"$(uname -m)"/kernel-*.rpm
 else
     rpmrebuild --additional=--buildroot=/tmp/buildroot --batch kernel-core-"${kernel_version}"

@@ -40,7 +40,7 @@ dnf install -y /tmp/kernel_cache/*.rpm
 if [[ "${KERNEL_FLAVOR}" == "surface" ]]; then
     KERNEL_VERSION=$(rpm -q kernel-surface|cut -d '-' -f2-)
 else
-    KERNEL_VERSION=$(rpm -q kernel-cachyos-lto|cut -d '-' -f2-)
+    KERNEL_VERSION=$(rpm -q kernel-cachyos|cut -d '-' -f2-)
 fi
 
 if [[ "${KERNEL_FLAVOR}" =~ "centos" ]]; then
