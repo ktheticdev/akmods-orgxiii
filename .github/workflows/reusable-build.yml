@@ -25,6 +25,8 @@ jobs:
     env:
       KCWD: /tmp/kernel-cache
       KCPATH: kernel_cache
+      CC: clang
+      CXX: clang++
     outputs:
       KCKEY: ${{ inputs.kernel_flavor }}-${{ steps.kernel-version.outputs.kernel_release }}
       KCWD: ${{ env.KCWD }}
@@ -338,6 +340,8 @@ jobs:
             FEDORA_MAJOR_VERSION=${{ inputs.fedora_version }}
             RPMFUSION_MIRROR=${{ vars.RPMFUSION_MIRROR }}
             DUAL_SIGN=false
+            CC=${{ env.CC }}
+            CXX=${{ env.CXX }}
           labels: ${{ steps.meta.outputs.labels }}
           oci: false
 
