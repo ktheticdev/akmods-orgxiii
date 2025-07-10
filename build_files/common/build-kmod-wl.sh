@@ -9,6 +9,7 @@ RELEASE="$(rpm -E '%fedora')"
 
 
 ### BUILD wl (succeed or fail-fast with debug output)
+export CFLAGS="-Wno-error=date-time"
 dnf install -y \
     akmod-wl-*.fc${RELEASE}.${ARCH}
 env CC=clang HOSTCC=clang CXX=clang++ LD=ld.lld LLVM=1 LLVM_IAS=1 akmods --force --kernels "${KERNEL}" --kmod wl
