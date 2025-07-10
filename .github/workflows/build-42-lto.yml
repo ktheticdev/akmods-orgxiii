@@ -1,0 +1,27 @@
+name: ublue akmods 42 lto
+on:
+  merge_group:
+  pull_request:
+    branches:
+      - lto
+    paths-ignore:
+      - '**.md'
+  schedule:
+    - cron: '5 0 * * *'  # 0005 UTC everyday
+  workflow_dispatch:
+
+jobs:
+  kernel-akmods:
+    uses: ./.github/workflows/reusable-build.yml
+    secrets: inherit
+    strategy:
+      fail-fast: false
+      matrix:
+        fedora_version:
+          - 42
+        kernel_flavor:
+          - cachyos-lto
+    with:
+      fedora_version: ${{ matrix.fedora_version }}
+      kernel_flavor: ${{ matrix.kernel_flavor }}
+      ref: lto
