@@ -25,6 +25,8 @@ jobs:
     env:
       KCWD: /tmp/kernel-cache
       KCPATH: kernel_cache
+      CC: clang
+      CXX: clang++
     outputs:
       KCKEY: ${{ inputs.kernel_flavor }}-${{ steps.kernel-version.outputs.kernel_release }}
       KCWD: ${{ env.KCWD }}
