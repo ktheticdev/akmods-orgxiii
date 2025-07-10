@@ -37,6 +37,9 @@ RUN --mount=type=bind,src=kernel_cache,dst=/tmp/kernel_cache,ro \
       cp /tmp/ublue-os-ucore-nvidia/rpmbuild/RPMS/noarch/ublue-os-ucore-nvidia*.rpm \
         /var/cache/rpms/ucore/ \
     ; fi && \
+    if [[ "{KERNEL_FLAVOR}" =~ "cachyos-lto" ]]; then \
+    	export CC=clang && export CXX=clang++ \
+    ; fi && \
     /tmp/build-ublue-os-nvidia-addons.sh && \
     cp /tmp/ublue-os-nvidia-addons/rpmbuild/RPMS/noarch/ublue-os-nvidia-addons*.rpm \
       /var/cache/rpms/ublue-os/ && \

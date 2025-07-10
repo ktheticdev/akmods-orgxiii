@@ -29,6 +29,9 @@ RUN --mount=type=bind,src=kernel_cache,dst=/tmp/kernel_cache,ro \
     ; else \
         export KERNEL_NAME="kernel-surface" \
     ; fi && \
+    if [[ "{KERNEL_FLAVOR}" =~ "cachyos-lto" ]]; then \
+    	export CC=clang && export CXX=clang++ \
+    ; fi && \
     /tmp/build-prep.sh && \
     # if grep -qv "asus" <<< "${KERNEL_FLAVOR}"; then \
     #     /tmp/build-kmod-zenergy.sh && \
