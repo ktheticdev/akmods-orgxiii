@@ -112,7 +112,7 @@ jobs:
           fi
 
           cd ${{ env.KCWD }}/rpms
-          rpm2cpio kernel-cachyos-core-"${{ steps.kernel-version.outputs.kernel_release }}".rpm | cpio -idmv
+          rpm2cpio kernel-cachyos-lto-core-"${{ steps.kernel-version.outputs.kernel_release }}".rpm | cpio -idmv
           cd ./lib/modules/"${{ steps.kernel-version.outputs.kernel_release }}"/
           sbverify --list vmlinuz
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then

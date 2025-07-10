@@ -3,7 +3,7 @@
 set -oeux pipefail
 
 ARCH="$(rpm -E '%_arch')"
-KERNEL="$(rpm -q kernel-cachyos --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}')"
+KERNEL="$(rpm -q kernel-cachyos-lto --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}')"
 RELEASE="$(rpm -E '%fedora')"
 
 cp /tmp/ublue-os-akmods-addons/rpmbuild/SOURCES/_copr_ublue-os-akmods.repo /etc/yum.repos.d/

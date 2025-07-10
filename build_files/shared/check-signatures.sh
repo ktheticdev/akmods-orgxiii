@@ -2,7 +2,7 @@
 
 source /tmp/info.sh
 
-KERNEL="$(rpm -q kernel-cachyos --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}')"
+KERNEL="$(rpm -q kernel-cachyos-lto --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}')"
 PUBLIC_CHAIN="/tmp/certs/public_key_chain.pem"
 
 for module in /usr/lib/modules/"${KERNEL}"/extra/*/*.ko*;
