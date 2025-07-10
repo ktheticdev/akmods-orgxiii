@@ -340,8 +340,8 @@ jobs:
             FEDORA_MAJOR_VERSION=${{ inputs.fedora_version }}
             RPMFUSION_MIRROR=${{ vars.RPMFUSION_MIRROR }}
             DUAL_SIGN=false
-            CC=${{ env.CC }}
-            CXX=${{ env.CXX }}
+            CC=clang
+            CXX=clang++
           labels: ${{ steps.meta.outputs.labels }}
           oci: false
 
