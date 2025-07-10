@@ -10,6 +10,7 @@ RELEASE="$(rpm -E '%fedora')"
 ### BUILD VirtualBox (succeed or fail-fast with debug output)
 dnf install -y \
     akmod-VirtualBox-*.fc${RELEASE}.${ARCH}
-CC=clang CXX=clang++ akmods --force --kernels "${KERNEL}" --kmod VirtualBox
+export CC=clang CXX=clang++
+akmods --force --kernels "${KERNEL}" --kmod VirtualBox
 modinfo /usr/lib/modules/${KERNEL}/extra/VirtualBox/{vboxdrv,vboxnetadp,vboxnetflt}.ko.xz > /dev/null \
 || (find /var/cache/akmods/VirtualBox/ -name \*.log -print -exec cat {} \; && exit 1)

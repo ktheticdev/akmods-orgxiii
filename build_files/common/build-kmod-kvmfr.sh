@@ -17,7 +17,8 @@ curl -LsSf -o /etc/yum.repos.d/_copr_hikariknight-looking-glass-kvmfr.repo "http
 ### BUILD kvmfr (succeed or fail-fast with debug output)
 dnf install -y \
     "akmod-kvmfr-*.fc${RELEASE}.${ARCH}"
-CC=clang CXX=clang++ akmods --force --kernels "${KERNEL}" --kmod kvmfr
+export CC=clang CXX=clang++
+akmods --force --kernels "${KERNEL}" --kmod kvmfr
 modinfo "/usr/lib/modules/${KERNEL}/extra/kvmfr/kvmfr.ko.xz" > /dev/null \
 || (find /var/cache/akmods/kvmfr/ -name \*.log -print -exec cat {} \; && exit 1)
 

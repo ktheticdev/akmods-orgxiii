@@ -36,7 +36,8 @@ NVIDIA_AKMOD_VERSION="$(basename "$(rpm -q "akmod-nvidia" --queryformat '%{VERSI
 
 sed -i "s/^MODULE_VARIANT=.*/MODULE_VARIANT=$KERNEL_MODULE_TYPE/" /etc/nvidia/kernel.conf
 
-CC=clang CXX=clang++ akmods --force --kernels "${KERNEL_VERSION}" --kmod "nvidia"
+export CC=clang CXX=clang++
+akmods --force --kernels "${KERNEL_VERSION}" --kmod "nvidia"
 
 modinfo /usr/lib/modules/${KERNEL_VERSION}/extra/nvidia/nvidia{,-drm,-modeset,-peermem,-uvm}.ko.xz > /dev/null || \
 (cat /var/cache/akmods/nvidia/${NVIDIA_AKMOD_VERSION}-for-${KERNEL_VERSION}.failed.log && exit 1)
