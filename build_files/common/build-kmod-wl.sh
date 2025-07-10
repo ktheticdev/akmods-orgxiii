@@ -9,11 +9,8 @@ RELEASE="$(rpm -E '%fedora')"
 
 
 ### BUILD wl (succeed or fail-fast with debug output)
-export CFLAGS="-Wno-error=date-time"
 dnf install -y \
     akmod-wl-*.fc${RELEASE}.${ARCH}
-env CC=clang HOSTCC=clang CXX=clang++ LD=ld.lld LLVM=1 LLVM_IAS=1 akmods --force --kernels "${KERNEL}" --kmod wl
+env CC=clang HOSTCC=clang CXX=clang++ LD=ld.lld LLVM=1 LLVM_IAS=1 CFLAGS="-Wno-error=date-time" akmods --force --kernels "${KERNEL}" --kmod wl
 modinfo /usr/lib/modules/${KERNEL}/extra/wl/wl.ko.xz > /dev/null \
 || (find /var/cache/akmods/wl/ -name \*.log -print -exec cat {} \; && exit 1)
-
-unset CFLAGS
