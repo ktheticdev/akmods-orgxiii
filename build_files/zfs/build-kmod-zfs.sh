@@ -70,7 +70,7 @@ cd /tmp/zfs-${ZFS_VERSION}
 ./configure \
         -with-linux=/usr/src/kernels/${KERNEL}/ \
         -with-linux-obj=/usr/src/kernels/${KERNEL}/ \
-    && make -j $(nproc) rpm-utils rpm-kmod \
+    && make -j $(nproc) CC=clang CXX=clang++ rpm-utils rpm-kmod \
     || (cat config.log && exit 1)
 
 
