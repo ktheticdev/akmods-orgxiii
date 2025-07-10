@@ -9,9 +9,11 @@ RELEASE="$(rpm -E '%fedora')"
 cp /tmp/ublue-os-akmods-addons/rpmbuild/SOURCES/_copr_ublue-os-akmods.repo /etc/yum.repos.d/
 
 ### BUILD ryzen-smu (succeed or fail-fast with debug output)
+export CC=clang
+export CXX=clang++
+export LD=ld.lld
 dnf install -y \
     akmod-ryzen-smu-*.fc${RELEASE}.${ARCH}
-export CC=clang CXX=clang++
 akmods --force --kernels "${KERNEL}" --kmod ryzen-smu
 modinfo /usr/lib/modules/${KERNEL}/extra/ryzen-smu/ryzen_smu.ko.xz > /dev/null \
 || (find /var/cache/akmods/ryzen-smu/ -name \*.log -print -exec cat {} \; && exit 1)
