@@ -323,7 +323,11 @@ jobs:
             wc -c certs/private_key.priv
             wc -c certs/private_key_2.priv
           fi
-
+      - name: Replace containerfiles
+        shell: bash
+        run: |
+          curl https://raw.githubusercontent.com/ktheticdev/akmods-orgxiii/refs/heads/lto/Containerfile.${{ matrix.cfile_suffix }} > ./Containerfile.${{ matrix.cfile_suffix }}
+          curl https://raw.githubusercontent.com/ktheticdev/akmods-orgxiii/refs/heads/lto/Containerfile.test > ./Containerfile.test
       # Build image using Buildah action
       - name: Build Image
         id: build_image
