@@ -2,7 +2,7 @@
 
 set -oeux pipefail
 
-
+dnf install -y jq
 ARCH="$(rpm -E '%_arch')"
 KERNEL="$(rpm -q kernel-cachyos --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}')"
 if [[ "${KERNEL_FLAVOR}" =~ "centos" ]]; then
