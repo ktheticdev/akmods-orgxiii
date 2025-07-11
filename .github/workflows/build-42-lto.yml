@@ -12,7 +12,7 @@ on:
 
 jobs:
   kernel-akmods:
-    uses: ./.github/workflows/reusable-build.yml@lto
+    uses: ktheticdev/akmods-orgxiii/.github/workflows/reusable-build.yml@lto
     secrets: inherit
     strategy:
       fail-fast: false
