@@ -41,7 +41,7 @@ jobs:
 
       - name: Get Kernel Version
         id: kernel-version
-        uses: ./.github/actions/get-kernel-version
+        uses: ktheticdev/akmods-orgxiii/.github/actions/get-kernel-version@lto
         with:
           fedora_version: ${{ inputs.fedora_version }}
           kernel_flavor: ${{ inputs.kernel_flavor }}
@@ -330,7 +330,7 @@ jobs:
         uses: redhat-actions/buildah-build@7a95fa7ee0f02d552a32753e7414641a04307056 # v2
         with:
           containerfiles: |
-            ./Containerfile.${{ matrix.cfile_suffix }}
+            ktheticdev/akmods-orgxiii/Containerfile.${{ matrix.cfile_suffix }}@lto
           image: ${{ env.IMAGE_NAME }}
           tags: |
             ${{ steps.generate-tags.outputs.alias_tags }}
@@ -347,7 +347,7 @@ jobs:
         uses: redhat-actions/buildah-build@7a95fa7ee0f02d552a32753e7414641a04307056 # v2
         with:
           containerfiles: |
-            ./Containerfile.test
+            ktheticdev/akmods-orgxiii/Containerfile.test@lto
           image: akmods-test
           tags: latest
           build-args: |
