@@ -330,7 +330,7 @@ jobs:
         uses: redhat-actions/buildah-build@7a95fa7ee0f02d552a32753e7414641a04307056 # v2
         with:
           containerfiles: |
-            ktheticdev/akmods-orgxiii/Containerfile.${{ matrix.cfile_suffix }}@lto
+            ./Containerfile.${{ matrix.cfile_suffix }}
           image: ${{ env.IMAGE_NAME }}
           tags: |
             ${{ steps.generate-tags.outputs.alias_tags }}
@@ -347,7 +347,7 @@ jobs:
         uses: redhat-actions/buildah-build@7a95fa7ee0f02d552a32753e7414641a04307056 # v2
         with:
           containerfiles: |
-            ktheticdev/akmods-orgxiii/Containerfile.test@lto
+            ./Containerfile.test
           image: akmods-test
           tags: latest
           build-args: |
