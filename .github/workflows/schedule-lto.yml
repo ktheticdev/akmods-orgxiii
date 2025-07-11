@@ -1,0 +1,23 @@
+name: Run cachyos-lto action on lto branch
+
+on:
+  schedule:
+    - cron: '5 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  trigger-lto-build:
+    name: Trigger Ublue Akmods 42 LTO Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call workflow_dispatch for lto branch build-42-lto.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          curl -sSL -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            https://api.github.com/repos/${REPO}/actions/workflows/build-42-lto.yml/dispatches \
+            -d '{"ref":"lto"}'
+
