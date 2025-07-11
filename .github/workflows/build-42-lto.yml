@@ -12,7 +12,7 @@ on:
 
 jobs:
   kernel-akmods:
-    uses: ./.github/workflows/reusable-build.yml
+    uses: ./.github/workflows/reusable-build.yml@lto
     secrets: inherit
     strategy:
       fail-fast: false
@@ -24,4 +24,3 @@ jobs:
     with:
       fedora_version: ${{ matrix.fedora_version }}
       kernel_flavor: ${{ matrix.kernel_flavor }}
-      ref: lto
