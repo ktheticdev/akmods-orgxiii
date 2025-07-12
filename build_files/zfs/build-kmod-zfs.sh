@@ -84,7 +84,6 @@ dnf install -y --skip-broken \
     libaio-devel \
     libattr-devel \
     elfutils-libelf-devel \
-    kernel-devel-$(uname -r) \
     python3 \
     python3-devel \
     python3-setuptools \
