@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 set -oeux pipefail
-
+dnf install -y jq
 ARCH="$(rpm -E '%_arch')"
 KERNEL="$(rpm -q kernel-cachyos-lto --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}')"
 echo $KERNEL
