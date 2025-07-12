@@ -1,11 +1,10 @@
 #!/usr/bin/bash
 
 set -oeux pipefail
+
 dnf install -y jq
 ARCH="$(rpm -E '%_arch')"
 KERNEL="$(rpm -q kernel-cachyos-lto --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}')"
-echo $KERNEL
-ls /usr/src/kernels/${KERNEL}
 if [[ "${KERNEL_FLAVOR}" =~ "centos" ]]; then
     RELEASE="$(rpm -E '%centos')"
 else
@@ -66,43 +65,12 @@ tar -z -x --no-same-owner --no-same-permissions -f zfs-${ZFS_VERSION}.tar.gz
 ZFS_MAJ=$(echo $ZFS_VERSION | cut -f1 -d.)
 ZFS_MIN=$(echo $ZFS_VERSION | cut -f2 -d.)
 ZFS_PATCH=$(echo $ZFS_VERSION | cut -f3 -d.)
-dnf install -y --skip-broken \
-    gcc \
-    libatomic \
-    make \
-    autoconf \
-    automake \
-    libtool \
-    rpm-build \
-    kernel-rpm-macros \
-    libtirpc-devel \
-    libblkid-devel \
-    libuuid-devel \
-    libudev-devel \
-    openssl-devel \
-    zlib-devel \
-    libaio-devel \
-    libattr-devel \
-    pam-devel \
-    libunwind-devel \
-    elfutils-libelf-devel \
-    python3 \
-    python3-devel \
-    python3-setuptools \
-    python3-cffi \
-    libffi-devel \
-    ncompress \
-    libcurl-devel
-dnf install -y --skip-broken \
-    python3-packaging \
-    dkms
-dnf install -y http://download.zfsonlinux.org/fedora/42/x86_64/libzfs6-devel-2.3.3-1.fc42.x86_64.rpm 
 
 cd /tmp/zfs-${ZFS_VERSION}
 env CC=clang HOSTCC=clang CXX=clang++ LD=ld.lld LLVM=1 LLVM_IAS=1 ./configure \
         -with-linux=/usr/src/kernels/${KERNEL}/ \
         -with-linux-obj=/usr/src/kernels/${KERNEL}/ \
-    && env CC=clang HOSTCC=clang CXX=clang++ LD=ld.lld LLVM=1 LLVM_IAS=1 make -j $(nproc) rpm-utils rpm-kmod \
+    && make -j $(nproc) CC=clang CXX=clang++ rpm-utils rpm-kmod \
     || (cat config.log && exit 1)
 
 
