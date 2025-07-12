@@ -83,16 +83,20 @@ dnf install -y --skip-broken \
     zlib-devel \
     libaio-devel \
     libattr-devel \
+    pam-devel \
+    libunwind-devel \
     elfutils-libelf-devel \
     python3 \
     python3-devel \
     python3-setuptools \
     python3-cffi \
     libffi-devel \
-    ncompress
+    ncompress \
+    libcurl-devel
 dnf install -y --skip-broken \
     python3-packaging \
     dkms
+dnf install -y http://download.zfsonlinux.org/fedora/42/x86_64/libzfs6-devel-2.3.3-1.fc42.x86_64.rpm 
 
 cd /tmp/zfs-${ZFS_VERSION}
 env CC=clang HOSTCC=clang CXX=clang++ LD=ld.lld LLVM=1 LLVM_IAS=1 ./configure \
