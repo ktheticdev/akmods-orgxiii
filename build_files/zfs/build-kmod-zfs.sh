@@ -90,7 +90,7 @@ dnf install -y --skip-broken \
     python3-cffi \
     libffi-devel \
     ncompress
-dnf install -y --skip-broken --enablerepo=epel --enablerepo=powertools \
+dnf install -y --skip-broken \
     python3-packaging \
     dkms
 
