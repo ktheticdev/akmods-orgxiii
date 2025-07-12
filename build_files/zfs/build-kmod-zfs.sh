@@ -67,8 +67,8 @@ ZFS_MAJ=$(echo $ZFS_VERSION | cut -f1 -d.)
 ZFS_MIN=$(echo $ZFS_VERSION | cut -f2 -d.)
 ZFS_PATCH=$(echo $ZFS_VERSION | cut -f3 -d.)
 dnf install -y --skip-broken \
-    epel-release \
     gcc \
+    libatomic \
     make \
     autoconf \
     automake \
