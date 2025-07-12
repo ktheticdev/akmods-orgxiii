@@ -95,7 +95,7 @@ dnf install -y --skip-broken \
     dkms
 
 cd /tmp/zfs-${ZFS_VERSION}
-./configure \
+env CC=clang HOSTCC=clang CXX=clang++ LD=ld.lld LLVM=1 LLVM_IAS=1 ./configure \
         -with-linux=/usr/src/kernels/${KERNEL}/ \
         -with-linux-obj=/usr/src/kernels/${KERNEL}/ \
     && env CC=clang HOSTCC=clang CXX=clang++ LD=ld.lld LLVM=1 LLVM_IAS=1 make -j $(nproc) rpm-utils rpm-kmod \
