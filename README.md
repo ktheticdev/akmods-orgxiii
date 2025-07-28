@@ -1,6 +1,6 @@
 # ublue-os akmods
 
-[![akmods lite 42](https://github.com/JoViatrix/akmods-lite/actions/workflows/build-42.yml/badge.svg)](https://github.com/JoViatrix/akmods-lite/actions/workflows/build-42.yml)
+[![akmods lite 42](https://github.com/ktheticdev/akmods-orgxiii/actions/workflows/build-42.yml/badge.svg)](https://github.com/ktheticdev/akmods-orgxiii/actions/workflows/build-42.yml)
 
 OCI images providing a set of cached kernel RPMs and extra kernel modules to Universal Blue images. Used for better hardware support and consistent build process.
 
