@@ -14,7 +14,7 @@ Source1:        nvidia-container.pp
 Source2:        ublue-nvctk-cdi.service
 Source3:        70-ublue-nvctk-cdi.preset
 Source4:        environment
-Source5:        negativo17-fedora-nvidia.repo
+Source5:        negativo17-fedora-multimedia.repo
 Source6:        60-nvidia-extra-devices-pm.rules
 Source7:        negativo17-epel-nvidia.repo
 
@@ -33,9 +33,9 @@ install -Dm0644 %{buildroot}%{_datadir}/ublue-os/%{_sysconfdir}/yum.repos.d/nega
 %endif
 %if 0%{?fedora}
 install -Dm0644 %{SOURCE4} %{buildroot}%{_datadir}/ublue-os/%{_sysconfdir}/sway/environment
-install -Dm0644 %{SOURCE5} %{buildroot}%{_datadir}/ublue-os/%{_sysconfdir}/yum.repos.d/negativo17-fedora-nvidia.repo
-sed -i 's@enabled=1@enabled=0@g' %{buildroot}%{_datadir}/ublue-os/%{_sysconfdir}/yum.repos.d/negativo17-fedora-nvidia.repo
-install -Dm0644 %{buildroot}%{_datadir}/ublue-os/%{_sysconfdir}/yum.repos.d/negativo17-fedora-nvidia.repo %{buildroot}%{_sysconfdir}/yum.repos.d/negativo17-fedora-nvidia.repo
+install -Dm0644 %{SOURCE5} %{buildroot}%{_datadir}/ublue-os/%{_sysconfdir}/yum.repos.d/negativo17-fedora-multimedia.repo
+sed -i 's@enabled=1@enabled=0@g' %{buildroot}%{_datadir}/ublue-os/%{_sysconfdir}/yum.repos.d/negativo17-fedora-multimedia.repo
+install -Dm0644 %{buildroot}%{_datadir}/ublue-os/%{_sysconfdir}/yum.repos.d/negativo17-fedora-multimedia.repo %{buildroot}%{_sysconfdir}/yum.repos.d/negativo17-fedora-multimedia.repo
 %endif
 
 install -Dm0644 %{SOURCE0} %{buildroot}%{_datadir}/ublue-os/%{_sysconfdir}/yum.repos.d/nvidia-container-toolkit.repo
@@ -54,8 +54,8 @@ install -Dm0644 %{buildroot}%{_datadir}/ublue-os/%{_unitdir}/ublue-nvctk-cdi.ser
 %endif
 %if 0%{?fedora}
 %attr(0644,root,root) %{_datadir}/ublue-os/%{_sysconfdir}/sway/environment
-%attr(0644,root,root) %{_datadir}/ublue-os/%{_sysconfdir}/yum.repos.d/negativo17-fedora-nvidia.repo
-%attr(0644,root,root) %{_sysconfdir}/yum.repos.d/negativo17-fedora-nvidia.repo
+%attr(0644,root,root) %{_datadir}/ublue-os/%{_sysconfdir}/yum.repos.d/negativo17-fedora-multimedia.repo
+%attr(0644,root,root) %{_sysconfdir}/yum.repos.d/negativo17-fedora-multimedia.repo
 %endif
 %attr(0644,root,root) %{_datadir}/ublue-os/%{_sysconfdir}/yum.repos.d/nvidia-container-toolkit.repo
 %attr(0644,root,root) %{_datadir}/ublue-os/%{_datadir}/selinux/packages/nvidia-container.pp
