@@ -172,11 +172,11 @@ if [[ -f $(find /tmp/akmods-rpms/kmods/kmod-nvidia-*.rpm 2> /dev/null) ]]; then
         # Codacy complains about the lack of quotes on ${NVIDIA_EXTRA_PKGS}, but we don't want quotes here
         # we want word splitting behavior, thus 'shellcheck disable=SC2086' added to the top of this file
 elif [[ -f $(find /tmp/akmods-rpms/kmods/zfs/kmod-*.rpm 2> /dev/null) ]]; then
-    dnf install -y \
+    dnf install -y --setopt=install_weak_deps=False \
         pv \
         /tmp/akmods-rpms/kmods/zfs/*.rpm
 else
-    dnf install -y \
+    dnf install -y --setopt=install_weak_deps=False \
         /tmp/akmods-rpms/kmods/*.rpm
 fi
 
