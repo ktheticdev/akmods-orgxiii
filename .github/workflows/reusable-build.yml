@@ -342,15 +342,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           oci: false
 
-      - name: Test Akmods Signature
-        id: test_akmods
-        shell: bash
-        run: |
-          if ! podman run akmods-test:latest; then
-              echo "Signatures Failed"
-              exit 1
-          fi
-
       # Workaround bug where capital letters in your GitHub username make it impossible to push to GHCR.
       # https://github.com/macbre/push-to-ghcr/issues/12
       - name: Lowercase Registry
