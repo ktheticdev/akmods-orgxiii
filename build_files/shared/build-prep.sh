@@ -51,7 +51,7 @@ fi
 echo "Installing ${KERNEL_FLAVOR} kernel-cache RPMs..."
 
 # build image has no kernel so this needs nothing fancy, just install, but not UKIs
-dnf install -y `find /tmp/kernel_cache/*.rpm -type f | grep -v uki | xargs`
+dnf install -y --setopt=install_weak_deps=False `find /tmp/kernel_cache/*.rpm -type f | grep -v uki | xargs`
 KERNEL_VERSION=$(rpm -q kernel-cachyos-lto | cut -d '-' -f2-)
 
 ### PREPARE BUILD ENV
@@ -86,7 +86,7 @@ if [[ "${DUAL_SIGN}" == "true" ]]; then
 fi
 
 # This is for ZFS more than CentOS|CoreOS
-if [[ "${KERNEL_FLAVOR}" =~ "centos" ]] || [[ "${KERNEL_FLAVOR}" =~ "coreos" ]]; then
+if [[ "${KERNEL_FLAVOR}" =~ "centos" ]] || [[ "${KERNEL_FLAVOR}" =~ "coreos" ]] || [[ "${KERNEL_FLAVOR}" =~ "cachyos" ]]; then
     install -Dm644 /tmp/certs/public_key.der /lib/modules/"${KERNEL_VERSION}"/build/certs/signing_key.x509
     install -Dm644 /tmp/certs/private_key.priv /lib/modules/"${KERNEL_VERSION}"/build/certs/signing_key.pem
     dnf install -y \
