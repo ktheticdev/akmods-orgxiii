@@ -7,7 +7,7 @@ ARCH="$(rpm -E '%_arch')"
 KERNEL="$(rpm -q kernel-cachyos-lto --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}')"
 RELEASE="$(rpm -E '%fedora')"
 
-if [[ "${RELEASE}" -ge 42 ]]; then
+if [[ "${RELEASE}" -ge 43 ]]; then
     COPR_RELEASE="rawhide"
 else
     COPR_RELEASE="${RELEASE}"
