@@ -7,7 +7,7 @@ ARCH="$(rpm -E '%_arch')"
 KERNEL="$(rpm -q kernel-cachyos-lto --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}')"
 RELEASE="$(rpm -E '%fedora')"
 
-COPR_RELEASE=43
+COPR_RELEASE=42
 
 curl -LsSf -o /etc/yum.repos.d/_copr_asan-acer-modules.repo "https://copr.fedorainfracloud.org/coprs/asan/acer-modules/repo/fedora-${COPR_RELEASE}/asan-acer-modules-fedora-${COPR_RELEASE}.repo"
 
