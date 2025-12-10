@@ -34,7 +34,13 @@ rpm -qa |grep nvidia
 KERNEL_VERSION="$(rpm -q kernel-cachyos-lto --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}')"
 NVIDIA_AKMOD_VERSION="$(basename "$(rpm -q "akmod-nvidia" --queryformat '%{VERSION}-%{RELEASE}')" ".${DIST}")"
 
-sed -i "s/^MODULE_VARIANT=.*/MODULE_VARIANT=$KERNEL_MODULE_TYPE/" /etc/nvidia/kernel.conf
+mkdir -p /etc/nvidia
+
+if [ -f /etc/nvidia/kernel.conf ]; then
+    sed -i "s/^MODULE_VARIANT=.*/MODULE_VARIANT=$KERNEL_MODULE_TYPE/" /etc/nvidia/kernel.conf
+else
+    echo "MODULE_VARIANT=$KERNEL_MODULE_TYPE" > /etc/nvidia/kernel.conf
+fi
 
 env CC=clang HOSTCC=clang CXX=clang++ LD=ld.lld LLVM=1 LLVM_IAS=1 akmods --force --kernels "${KERNEL_VERSION}" --kmod "nvidia"
 
