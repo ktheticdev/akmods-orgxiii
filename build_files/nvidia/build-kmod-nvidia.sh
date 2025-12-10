@@ -10,14 +10,14 @@ if [[ "${KERNEL_FLAVOR}" =~ "centos" ]]; then
     # on CentOS, akmods uses full kernel version and release but no arch
     VARS_KERNEL_VERSION="$(rpm -q kernel-cachyos --queryformat '%{VERSION}-%{RELEASE}')"
     # enable negativo17
-    cp /tmp/ublue-os-nvidia-addons/rpmbuild/SOURCES/negativo17-epel-nvidia.repo /etc/yum.repos.d/
+    cp /tmp/ublue-os-nvidia-addons/rpmbuild/SOURCES/negativo17-epel-multimedia.repo /etc/yum.repos.d/
 else
     DIST="fc$(rpm -E '%fedora')"
     # on Fedora, akmods uses full kernel version, release and arch
     VARS_KERNEL_VERSION="$(rpm -q kernel-cachyos --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}')"
     # disable rpmfusion and enable negativo17
     sed -i 's/enabled=1/enabled=0/' /etc/yum.repos.d/rpmfusion-*.repo
-    cp /tmp/ublue-os-nvidia-addons/rpmbuild/SOURCES/negativo17-fedora-nvidia.repo /etc/yum.repos.d/
+    cp /tmp/ublue-os-nvidia-addons/rpmbuild/SOURCES/negativo17-fedora-multimedia.repo /etc/yum.repos.d/
 fi
 DEPRECATED_RELEASE="${DIST}.${ARCH}"
 
@@ -34,7 +34,13 @@ rpm -qa |grep nvidia
 KERNEL_VERSION="$(rpm -q kernel-cachyos --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}')"
 NVIDIA_AKMOD_VERSION="$(basename "$(rpm -q "akmod-nvidia" --queryformat '%{VERSION}-%{RELEASE}')" ".${DIST}")"
 
-sed -i "s/^MODULE_VARIANT=.*/MODULE_VARIANT=$KERNEL_MODULE_TYPE/" /etc/nvidia/kernel.conf
+mkdir -p /etc/nvidia
+
+if [ -f /etc/nvidia/kernel.conf ]; then
+    sed -i "s/^MODULE_VARIANT=.*/MODULE_VARIANT=$KERNEL_MODULE_TYPE/" /etc/nvidia/kernel.conf
+else
+    echo "MODULE_VARIANT=$KERNEL_MODULE_TYPE" > /etc/nvidia/kernel.conf
+fi
 
 akmods --force --kernels "${KERNEL_VERSION}" --kmod "nvidia"
 
