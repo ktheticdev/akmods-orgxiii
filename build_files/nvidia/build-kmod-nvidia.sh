@@ -27,6 +27,7 @@ cd /tmp
 
 
 dnf install -y \
+    gcc-c++ \
     "akmod-nvidia*.${DIST}.${ARCH}"
 
 # Either successfully build and install the kernel modules, or fail early with debug output
