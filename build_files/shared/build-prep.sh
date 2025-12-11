@@ -58,7 +58,9 @@ KERNEL_VERSION=$(rpm -q "${KERNEL_NAME}" | cut -d '-' -f2-)
 dnf install -y \
     akmods \
     mock \
-    ruby-devel
+    ruby-devel \
+    gcc-c++ \
+    plymouth
 
 gem install fpm
 
