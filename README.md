@@ -1,6 +1,6 @@
 # ublue-os akmods
 
-[![akmods lite 42](https://github.com/ktheticdev/akmods-orgxiii/actions/workflows/build-42.yml/badge.svg)](https://github.com/ktheticdev/akmods-orgxiii/actions/workflows/build-42.yml)
+[![akmods lite 43](https://github.com/ktheticdev/akmods-orgxiii/actions/workflows/build-43.yml/badge.svg)](https://github.com/ktheticdev/akmods-orgxiii/actions/workflows/build-43.yml)
 
 OCI images providing a set of cached kernel RPMs and extra kernel modules to Universal Blue images. Used for better hardware support and consistent build process.
 
@@ -25,7 +25,7 @@ Builds also run for different kernels:
   - `main` - current default kernel version
   - `coreos-stable` - current Fedora CoreOS stable kernel version
   - `coreos-testing` - current Fedora CoreOS testing kernel version
-- `ublue 42` - Fedora 42 kernel builds:
+- `ublue 43` - Fedora 43 kernel builds:
   - `main` - current default kernel version
   - `coreos-stable` - current Fedora CoreOS stable kernel version
   - `coreos-testing` - current Fedora CoreOS testing kernel version
@@ -45,13 +45,13 @@ This table shows what groups build for which kernel and Fedora release:
 | 41 | coreos-stable | nvidia |
 | 41 | coreos-stable | nvidia-open |
 | 41 | coreos-stable | zfs |
-| 42 | main | common |
-| 42 | main | nvidia |
-| 42 | main | nvidia-open |
-| 42 | coreos-stable | common |
-| 42 | coreos-stable | nvidia |
-| 42 | coreos-stable | nvidia-open |
-| 42 | coreos-stable | zfs |
+| 43 | main | common |
+| 43 | main | nvidia |
+| 43 | main | nvidia-open |
+| 43 | coreos-stable | common |
+| 43 | coreos-stable | nvidia |
+| 43 | coreos-stable | nvidia-open |
+| 43 | coreos-stable | zfs |
 
 ## Features
 
