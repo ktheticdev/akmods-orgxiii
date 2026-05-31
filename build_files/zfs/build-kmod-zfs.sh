@@ -1,15 +1,8 @@
 #!/usr/bin/bash
 
-set -oeux pipefail
+set ${CI:+-x} -euo pipefail
 
-dnf install -y jq
-ARCH="$(rpm -E '%_arch')"
 KERNEL="$(rpm -q kernel-cachyos-lto --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}')"
-if [[ "${KERNEL_FLAVOR}" =~ "centos" ]]; then
-    RELEASE="$(rpm -E '%centos')"
-else
-    RELEASE="$(rpm -E '%fedora')"
-fi
 # allow pinning to a specific release series (eg, 2.0.x or 2.1.x)
 ZFS_MINOR_VERSION="${ZFS_MINOR_VERSION:-}"
 
@@ -18,6 +11,7 @@ cd /tmp
 # Use cURL to fetch the given URL, saving the response to `data.json`
 curl "https://api.github.com/repos/openzfs/zfs/releases" -o data.json
 ZFS_VERSION=$(jq -r --arg ZMV "zfs-${ZFS_MINOR_VERSION}" '[ .[] | select(.prerelease==false and .draft==false) | select(.tag_name | startswith($ZMV))][0].tag_name' data.json|cut -f2- -d-)
+echo "ZFS_MINOR_VERSION==$ZFS_MINOR_VERSION"
 echo "ZFS_VERSION==$ZFS_VERSION"
 
 
@@ -38,47 +32,73 @@ gpg --yes --keyserver keyserver.ubuntu.com --recv C77B9667
 gpg --yes --keyserver keyserver.ubuntu.com --recv C6AF658B
 
 echo "Verifying tar.gz signature"
-gpg --verify "zfs-${ZFS_VERSION}.tar.gz.asc" "zfs-${ZFS_VERSION}.tar.gz"
-if [ $? -ne 0 ]; then
+if ! gpg --verify "zfs-${ZFS_VERSION}.tar.gz.asc" "zfs-${ZFS_VERSION}.tar.gz"; then
     echo "ZFS tarball signature verification FAILED! Exiting..."
     exit 1
 fi
 
 echo "Verifying checksum signature"
-gpg --verify "zfs-${ZFS_VERSION}.sha256.asc"
-if [ $? -ne 0 ]; then
+if ! gpg --verify "zfs-${ZFS_VERSION}.sha256.asc"; then
     echo "Checksum signature verification FAILED! Exiting..."
     exit 1
 fi
 
 echo "Verifying encrypted checksum"
-gpg --decrypt "zfs-${ZFS_VERSION}.sha256.asc" | sha256sum -c
-if [ $? -ne 0 ]; then
+if ! gpg --decrypt "zfs-${ZFS_VERSION}.sha256.asc" | sha256sum -c; then
     echo "Checksum verification FAILED! Exiting..."
     exit 1
 fi
 
 # no-same-owner/no-same-permissions required for F40 based images building on podman 3.4.4 (ubuntu 22.04)
-tar -z -x --no-same-owner --no-same-permissions -f zfs-${ZFS_VERSION}.tar.gz
+tar -z -x --no-same-owner --no-same-permissions -f "zfs-${ZFS_VERSION}.tar.gz"
 
-# patch the zfs-kmod.spec.in file for older zfs versions
-ZFS_MAJ=$(echo $ZFS_VERSION | cut -f1 -d.)
-ZFS_MIN=$(echo $ZFS_VERSION | cut -f2 -d.)
-ZFS_PATCH=$(echo $ZFS_VERSION | cut -f3 -d.)
+cd "/tmp/zfs-${ZFS_VERSION}"
+# normalize timestamps so autotools doesn't complain about clock skew
+find . -exec touch -h -r "/tmp/zfs-${ZFS_VERSION}.tar.gz" {} + 2>/dev/null || true
+# ensure rpm spec depends on correct kernel-devel package, else build fails on kernel-longterm kernels
+sed -i "s|kernel-devel|${KERNEL_NAME}-devel|" rpm/*/*spec.in
 
-cd /tmp/zfs-${ZFS_VERSION}
-env CC=clang HOSTCC=clang CXX=clang++ LD=ld.lld LLVM=1 LLVM_IAS=1 ./configure \
-        -with-linux=/usr/src/kernels/${KERNEL}/ \
-        -with-linux-obj=/usr/src/kernels/${KERNEL}/ \
-    && make -j $(nproc) CC=clang CXX=clang++ rpm-utils rpm-kmod \
-    || (cat config.log && exit 1)
+# GCC 16+ rejects earlyclobber on hard-bound registers (see GCC PR 87600)
+LOCALLY_PATCHED=false
+if [ "$(uname -m)" = "aarch64" ]; then
+    if grep -q '^#define[[:space:]]*UVR.*"+&w"' module/zfs/vdev_raidz_math_aarch64_neon_common.h; then
+        echo "PATCH raidz aarch64 neon to drop earlyclobber"
+        sed -i '/^#define[[:space:]]*UVR/s/"+&w"/"+w"/g' module/zfs/vdev_raidz_math_aarch64_neon_common.h
+        LOCALLY_PATCHED=true
+    else
+        echo "SKIP patch to raidz aarch64 neon, already applied upstream"
+    fi
+fi
+if ! env CC=clang HOSTCC=clang CXX=clang++ LD=ld.lld LLVM=1 LLVM_IAS=1 ./configure \
+        -with-linux="/usr/src/kernels/${KERNEL}/" \
+        -with-linux-obj="/usr/src/kernels/${KERNEL}/" \
+    || ! make -j "$(nproc)" CC=clang CXX=clang++ rpm-utils rpm-kmod; then
+    cat config.log && exit 1
+fi
 
+# validate RAIDZ math implementations when we've locally patched on aarch64
+if [ "${LOCALLY_PATCHED}" = "true" ]; then
+    echo "Installing ZFS packages for raidz_test validation..."
+    rpm -ivh --nodeps \
+        ./lib*."$(uname -m)".rpm \
+        ./zfs-2.[0-9]*."$(uname -m)".rpm \
+        ./zfs-test-*."$(uname -m)".rpm \
+        2> >(grep -v debuginfo >&2)
+    ldconfig
+    if ! command -v raidz_test &>/dev/null; then
+        echo "ERROR: raidz_test not found after installing zfs-test package"
+        exit 1
+    fi
+    echo "Running raidz_test to validate RAIDZ math implementations..."
+    raidz_test -S -t 60
+    echo "raidz_test PASSED"
+fi
 
 # create a directory for later copying of resulting zfs specific artifacts
-mkdir -p /var/cache/rpms/kmods/zfs/{debug,devel,other,src} \
-    && mv *src.rpm /var/cache/rpms/kmods/zfs/src/ \
-    && mv *devel*.rpm /var/cache/rpms/kmods/zfs/devel/ \
-    && mv *debug*.rpm /var/cache/rpms/kmods/zfs/debug/ \
-    && mv zfs-dracut*.rpm /var/cache/rpms/kmods/zfs/other/ \
-    && mv zfs-test*.rpm /var/cache/rpms/kmods/zfs/other/ \
-    && mv *.rpm /var/cache/rpms/kmods/zfs/
+mkdir -p /var/cache/rpms/kmods/zfs/{debug,devel,other,src}
+mv ./*src.rpm /var/cache/rpms/kmods/zfs/src/
+mv ./*devel*.rpm /var/cache/rpms/kmods/zfs/devel/
+mv ./*debug*.rpm /var/cache/rpms/kmods/zfs/debug/
+mv zfs-dracut*.rpm /var/cache/rpms/kmods/zfs/other/
+mv zfs-test*.rpm /var/cache/rpms/kmods/zfs/other/
+mv ./*.rpm /var/cache/rpms/kmods/zfs/
