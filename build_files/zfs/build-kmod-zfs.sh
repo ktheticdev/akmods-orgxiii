@@ -16,7 +16,7 @@ echo "ZFS_VERSION==$ZFS_VERSION"
 
 
 ### zfs specific build deps
-dnf install -y libtirpc-devel libblkid-devel libuuid-devel libfetch-devel libudev-devel openssl-devel libaio-devel libattr-devel elfutils-libelf-devel python3-devel libffi-devel libcurl-devel ncompress python3-setuptools
+dnf install -y libtirpc-devel libblkid-devel libuuid-devel libudev-devel openssl-devel libaio-devel libattr-devel elfutils-libelf-devel python3-devel libffi-devel libcurl-devel ncompress python3-setuptools
 
 
 ### BUILD zfs
