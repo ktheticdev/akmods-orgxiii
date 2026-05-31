@@ -69,7 +69,7 @@ if [ "$(uname -m)" = "aarch64" ]; then
         echo "SKIP patch to raidz aarch64 neon, already applied upstream"
     fi
 fi
-if ! env CC=clang HOSTCC=clang CXX=clang++ LD=ld.lld LLVM=1 LLVM_IAS=1 ./configure \
+if ! env CC=clang HOSTCC=clang CXX=clang++ LD=ld.lld LLVM=1 LLVM_IAS=1 ./configure KERNEL_LLVM=1 \
         -with-linux="/usr/src/kernels/${KERNEL}/" \
         -with-linux-obj="/usr/src/kernels/${KERNEL}/" \
     || ! make -j "$(nproc)" CC=clang CXX=clang++ HOSTCC=clang LD=ld.lld LLVM=1 LLVM_IAS=1 rpm-utils rpm-kmod; then
