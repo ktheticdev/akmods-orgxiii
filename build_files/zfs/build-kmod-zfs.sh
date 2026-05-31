@@ -16,7 +16,7 @@ echo "ZFS_VERSION==$ZFS_VERSION"
 
 
 ### zfs specific build deps
-dnf install -y libtirpc-devel libblkid-devel libuuid-devel libudev-devel openssl-devel libaio-devel libattr-devel elfutils-libelf-devel python3-devel libffi-devel libcurl-devel ncompress python3-setuptools
+dnf install -y libtirpc-devel libblkid-devel libuuid-devel libfetch-devel libudev-devel openssl-devel libaio-devel libattr-devel elfutils-libelf-devel python3-devel libffi-devel libcurl-devel ncompress python3-setuptools
 
 
 ### BUILD zfs
@@ -72,7 +72,7 @@ fi
 if ! env CC=clang HOSTCC=clang CXX=clang++ LD=ld.lld LLVM=1 LLVM_IAS=1 ./configure \
         -with-linux="/usr/src/kernels/${KERNEL}/" \
         -with-linux-obj="/usr/src/kernels/${KERNEL}/" \
-    || ! make -j "$(nproc)" CC=clang CXX=clang++ rpm-utils rpm-kmod; then
+    || ! make -j "$(nproc)" CC=clang CXX=clang++ HOSTCC=clang LD=ld.lld LLVM=1 LLVM_IAS=1 rpm-utils rpm-kmod; then
     cat config.log && exit 1
 fi
 
